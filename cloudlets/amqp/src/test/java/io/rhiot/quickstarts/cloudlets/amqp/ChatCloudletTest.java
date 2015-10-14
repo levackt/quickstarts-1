@@ -48,6 +48,20 @@ public class ChatCloudletTest extends Assert {
     }
 
     @Test
+    public void shouldPostChatUsingREST() throws InterruptedException, IOException {
+        // Given
+        chat.clear();
+        camelContext().createProducerTemplate().sendBody("netty4-http:http://localhost:8180/chat", "Hello I'm the IoT device!");
+        camelContext().createProducerTemplate().sendBody("netty4-http:http://localhost:8180/chat", "Just wanted to say hello!");
+
+        // When
+        String chat = IOUtils.toString(new URL("http://localhost:8180/chat"));
+
+        // Then
+        assertEquals("Hello I'm the IoT device!\nJust wanted to say hello!", chat);
+    }
+    
+    @Test
     public void shouldReadChatUsingAmqp() throws Exception {
         // Given
         chat.clear();

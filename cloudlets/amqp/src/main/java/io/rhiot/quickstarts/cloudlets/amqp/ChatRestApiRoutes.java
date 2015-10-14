@@ -12,8 +12,8 @@ public class ChatRestApiRoutes extends RouteBuilder {
     public void configure() throws Exception {
         restConfiguration().component("netty4-http").host("0.0.0.0").port(8180);
 
-        rest("/chat").get().route().process(
-                exchange -> exchange.getIn().setBody(join(ChatCloudlet.chat, "\n"))
+        rest("/chat").get().route().process(exchange -> exchange.getIn().setBody(join(ChatCloudlet.chat, "\n"))).endRest()
+                .post().route().process(exchange -> ChatCloudlet.chat.add(exchange.getIn().getBody(String.class))
         );
     }
 
